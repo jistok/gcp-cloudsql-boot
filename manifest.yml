@@ -4,4 +4,5 @@ applications:
     path: target/gcp-cloudsql-boot-0.0.1-SNAPSHOT.jar
     buildpack: java_buildpack_offline
     memory: 1G
-
+    env:
+        CLOUDSQL_REGION: us-central1

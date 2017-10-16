@@ -14,34 +14,32 @@ import java.util.*;
 @RestController
 public class CloudsqlController {
 
-    private static final String GOOGLE_APPLICATION_CREDENTIALS = "GOOGLE_APPLICATION_CREDENTIALS";
-
-    private static final String GCP_CREDENTIALS_FILE_NAME = "GCP_credentials.json";
-
     private String instanceConnectionName;
-
-    private String databaseName; // database_name in VCAP_SERVICES
-
-    private String username; // Username in VCAP_SERVICES
-
-    private String password; // Password in VCAP_SERVICES
+    private String databaseName;
+    private String username;
+    private String password;
 
     private Connection connection;
 
+    private static final String GOOGLE_APPLICATION_CREDENTIALS = "GOOGLE_APPLICATION_CREDENTIALS";
+    private static final String GCP_CREDENTIALS_FILE_NAME = "GCP_credentials.json";
+
     private void parseVcapServices() {
-        // 1. Get the MySQL details
+        // 1. Get the MySQL details.
         JSONObject mySqlCred = getCredObj("google-cloudsql-mysql");
         String projectId = null; // Get this later, from a different service binding
-        String region = "us-central1"; // FIXME: region must be accessible in creds from CloudSQL binding
+        String region = System.getenv("CLOUDSQL_REGION"); // FIXME: Get this from CloudSQL service binding
         String instanceName = mySqlCred.getString("instance_name");
         this.databaseName = mySqlCred.getString("database_name");
         this.username = mySqlCred.getString("Username");
         this.password = mySqlCred.getString("Password");
 
-        // 2. Get remaining parts from Storage binding(?)
+        // 2. Get remaining parts from Storage binding.
         JSONObject storageCred = getCredObj("google-storage");
         projectId = storageCred.getString("ProjectId");
         this.instanceConnectionName = String.join(":", projectId, region, instanceName);
+
+        // 3. Write out the GOOGLE_APPLICATION_CREDENTIALS file and set up environment variable.
         String privateKeyData = storageCred.getString("PrivateKeyData");
         setupCredentials(privateKeyData);
     }
@@ -122,7 +120,6 @@ public class CloudsqlController {
         try (Statement statement = connection.createStatement()) {
           ResultSet resultSet = statement.executeQuery("SHOW TABLES");
           while (resultSet.next()) {
-            //System.out.println(resultSet.getString(1));
             rv.add(resultSet.getString(1));
           }
         }
@@ -133,7 +130,7 @@ public class CloudsqlController {
     public List<String> now() throws SQLException {
 
         List<String> rv = new ArrayList<>();
-        rv.add("Greetings from now()");
+        rv.add("Greetings from now");
 
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery("SELECT NOW()");
