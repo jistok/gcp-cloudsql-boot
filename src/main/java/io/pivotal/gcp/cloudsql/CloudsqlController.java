@@ -111,6 +111,20 @@ public class CloudsqlController {
         return "Greetings from Spring Boot!";
     }
 
+    @RequestMapping("/createTable")
+    public String createTable() throws SQLException {
+
+        String rv = "OK";
+        String sql = "CREATE TABLE test_table (id INT, name VARCHAR(255))";
+
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (Exception e) {
+            rv = "FAILED: " + e.getMessage();
+        }
+        return rv;
+    }
+
     @RequestMapping("/showTables")
     public List<String> showTables() throws SQLException {
 
@@ -122,6 +136,20 @@ public class CloudsqlController {
           while (resultSet.next()) {
             rv.add(resultSet.getString(1));
           }
+        }
+        return rv;
+    }
+
+    @RequestMapping("/dropTable")
+    public String dropTable() throws SQLException {
+
+        String rv = "OK";
+        String sql = "DROP TABLE test_table";
+
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (Exception e) {
+            rv = "FAILED: " + e.getMessage();
         }
         return rv;
     }
