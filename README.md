@@ -11,13 +11,9 @@ for further background on why this is currently challenging.
 
 1. Create an instance of CloudSQL: `cf cs google-cloudsql-mysql small cloudsql-test`
 1. This will take a bit of time.  You can monitor its progress using `cf services`; it will initially show `create in progress`, and this will change to `create succeeded` when it's ready.
-1. Create an instance of Cloud Storage: ` cf cs google-storage standard storage`
 1. Build the app: `bash ./mvnw clean package -DskipTests`
-1. Go to the CloudSQL dashboard, `https://console.cloud.google.com/sql/instances?project=YOUR_PROJECT`, and verify the region your instance is running in.  This is shown in the "Instance connection name" column; example: `us-central1`.
-1. Edit the [manifest](./manifest.yml), assigning that region value to `CLOUDSQL_REGION`
 1. Push the app without starting it: `cf push --no-start`
-1. Bind the CloudSQL instance: `cf bs gcp-cloudsql-boot cloudsql-test`
-1. Bind the Storage instance: `cf bs gcp-cloudsql-boot storage -c '{"role": "editor"}'`
+1. Bind the CloudSQL instance: `cf bs gcp-cloudsql-boot cloudsql-test -c '{"role": "editor"}'`
 1. Start the app: `cf start gcp-cloudsql-boot`
 
 ## Assuming all goes according to plan, you can try it:
