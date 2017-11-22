@@ -27,20 +27,14 @@ public class CloudsqlController {
     private void parseVcapServices() {
         // 1. Get the MySQL details.
         JSONObject mySqlCred = getCredObj("google-cloudsql-mysql");
-        String projectId = null; // Get this later, from a different service binding
-        String region = System.getenv("CLOUDSQL_REGION"); // FIXME: Get this from CloudSQL service binding
+        String region = mySqlCred.getString("region");
         String instanceName = mySqlCred.getString("instance_name");
         this.databaseName = mySqlCred.getString("database_name");
         this.username = mySqlCred.getString("Username");
         this.password = mySqlCred.getString("Password");
-
-        // 2. Get remaining parts from Storage binding.
-        JSONObject storageCred = getCredObj("google-storage");
-        projectId = storageCred.getString("ProjectId");
+        String projectId = mySqlCred.getString("ProjectId");
         this.instanceConnectionName = String.join(":", projectId, region, instanceName);
-
-        // 3. Write out the GOOGLE_APPLICATION_CREDENTIALS file and set up environment variable.
-        String privateKeyData = storageCred.getString("PrivateKeyData");
+        String privateKeyData = mySqlCred.getString("PrivateKeyData");
         setupCredentials(privateKeyData);
     }
 
