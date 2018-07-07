@@ -1,5 +1,7 @@
 # Spring Boot Application Which Uses Google CloudSQL
 
+**CAVEAT (7 July 2018):** This was relevant at the time it was built, but isn't so valuable currently as there are more refined ways to achieve this. [This reference](https://docs.spring.io/spring-cloud-gcp/docs/1.1.0.BUILD-SNAPSHOT/reference/htmlsingle/#_cloud_foundry), for example, would be useful.
+
 The purpose of this is to illustrate a way to deploy to Cloud Foundry
 a Spring Boot app which uses the GCP CloudSQL service offered by the
 [GCP Service Broker](https://github.com/GoogleCloudPlatform/gcp-service-broker).
